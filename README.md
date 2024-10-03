@@ -4,8 +4,8 @@ A secure admin login page that incorporates email verification, OTP-based authen
 
 ## 🌟 Live Demo
 
-- Frontend: https://private-login-page.netlify.app/
-- Backend API: https://private-login-page-backend.onrender.com/
+- Frontend[Firebase]: https://wisdompeak-assignment.web.app/
+- Backend[Render]: https://private-login-page-backend.onrender.com/
 
 ## 🚀 Features
 
