@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="../src/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Login</h1>
+        <div id="loginForm">
+            <input type="email" id="email" placeholder="Enter your email" required>
+            <button id="verifyEmail">Verify Email</button>
+            <div id="otpSection" style="display: none;">
+                <input type="text" id="otp" placeholder="Enter OTP" required>
+                <label>
+                    <input type="checkbox" id="rememberMe">
+                    Remember Me
+                </label>
+                <button id="verifyOTP">Login</button>
+            </div>
+        </div>
+        <div id="loggedInSection" style="display: none;">
+            <h2>Welcome, <span id="userEmail"></span>!</h2>
+            <button id="logout">Logout</button>
+        </div>
+    </div>
+    <script src="../src/js/main.js"></script>
+</body>
+</html>
