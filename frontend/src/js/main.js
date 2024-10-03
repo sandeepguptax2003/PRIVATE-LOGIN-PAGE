@@ -1,5 +1,5 @@
 // Base API URL for authentication endpoints
-const API_URL = 'http://localhost:3000/api/auth';
+const API_URL = 'https://private-login-page-backend.onrender.com/api/auth';
 
 // HTML elements
 const emailInput = document.getElementById('email');
