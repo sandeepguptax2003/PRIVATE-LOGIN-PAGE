@@ -1,31 +1,26 @@
-const admin = require('../config/firebase');
+const jwt = require('jsonwebtoken');
 
-exports.isAuthenticated = async (req, res, next) => {
-  const sessionToken = req.cookies.session;
+// Middleware function to verify the JWT token
+exports.verifyToken = (req, res, next) => {
+  // Retrieve the token from the request headers
+  const token = req.headers['authorization'];
 
-  if (!sessionToken) {
-    return res.status(401).json({ message: "Unauthorized: No session token" });
+  // If no token is found, return a 403 Forbidden response
+  if (!token) {
+    return res.status(403).json({ message: "No token provided." });
   }
 
-  try {
-    const sessionDoc = await admin.firestore().collection('sessions').doc(sessionToken).get();
-
-    if (!sessionDoc.exists) {
-      return res.status(401).json({ message: "Unauthorized: Invalid session" });
+  // Verify the provided token using the secret stored in environment variables
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    // If token verification fails, return a 401 Unauthorized response
+    if (err) {
+      return res.status(401).json({ message: "Unauthorized!" });
     }
+    
+    // If the token is valid, save the decoded token (user data) in the request object
+    req.user = decoded;
 
-    const { email, expirationDate } = sessionDoc.data();
-
-    if (new Date() > new Date(expirationDate)) {
-      await admin.firestore().collection('sessions').doc(sessionToken).delete();
-      res.clearCookie('session');
-      return res.status(401).json({ message: "Unauthorized: Session expired" });
-    }
-
-    req.user = { email };
+    // Proceed to the next middleware or route handler
     next();
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Authentication error occurred." });
-  }
+  });
 };

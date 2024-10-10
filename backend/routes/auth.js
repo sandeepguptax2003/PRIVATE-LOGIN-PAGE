@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
-const { isAuthenticated } = require('../middleware/authMiddleware');
 
+// Route for email verification
 router.post('/verify-email', authController.verifyEmail);
+// Route for OTP verification
 router.post('/verify-otp', authController.verifyOTP);
-router.post('/logout', isAuthenticated, authController.logout);
-router.get('/check-auth', isAuthenticated, (req, res) => {
-  res.status(200).json({ message: "Authenticated", user: req.user });
-});
+// Route for auto-login
+router.post('/auto-login', authController.autoLogin);
 
 module.exports = router;
