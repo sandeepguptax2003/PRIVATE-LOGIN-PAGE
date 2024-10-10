@@ -13,12 +13,11 @@ const userEmailSpan = document.getElementById('userEmail');
 const logoutBtn = document.getElementById('logout');
 const loginForm = document.getElementById('loginForm');
 
-// Event listeners to buttons for email verification, OTP verification, and logout
+// Event listeners
 verifyEmailBtn.addEventListener('click', verifyEmail);
 verifyOTPBtn.addEventListener('click', verifyOTP);
 logoutBtn.addEventListener('click', logout);
 
-// Function to verify email by sending a POST request to the server
 async function verifyEmail() {
     const email = emailInput.value;
     try {
@@ -33,11 +32,11 @@ async function verifyEmail() {
             alert(data.message);
             otpSection.style.display = 'block';
         } else {
-            alert(data.message);
+            alert(data.message || 'An error occurred while verifying email.');
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred while verifying email.');
+        alert('An error occurred while verifying email. Please check the console for more details.');
     }
 }
 
@@ -56,11 +55,11 @@ async function verifyOTP() {
         if (response.ok) {
             showLoggedInState(email);
         } else {
-            alert(data.message);
+            alert(data.message || 'An error occurred while verifying OTP.');
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred while verifying OTP.');
+        alert('An error occurred while verifying OTP. Please check the console for more details.');
     }
 }
 
@@ -70,7 +69,6 @@ function showLoggedInState(email) {
     userEmailSpan.textContent = email;
 }
 
-// Function to handle logout
 async function logout() {
     try {
         const response = await fetch(`${API_URL}/logout`, {
@@ -85,15 +83,15 @@ async function logout() {
             otpInput.value = '';
             rememberMeCheckbox.checked = false;
         } else {
-            alert('Logout failed. Please try again.');
+            const data = await response.json();
+            alert(data.message || 'Logout failed. Please try again.');
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred while logging out.');
+        alert('An error occurred while logging out. Please check the console for more details.');
     }
 }
 
-// Function to automatically log in the user if they have a valid token
 async function checkAuth() {
     try {
         const response = await fetch(`${API_URL}/check-auth`, {
@@ -113,20 +111,8 @@ async function checkAuth() {
     }
 }
 
-// Updated autoLogin function
-async function autoLogin() {
-    const token = localStorage.getItem('token');
-    const email = localStorage.getItem('email');
-    if (token && email) {
-        const isAuthenticated = await checkAuth();
-        if (isAuthenticated) {
-            showLoggedInState(email);
-        }
-    }
-}
-
 // Check authentication status when the page loads
 checkAuth();
 
 // Periodically check authentication status
-setInterval(checkAuth, 5 * 60 * 1000);
+setInterval(checkAuth, 5 * 60 * 1000); // Check every 5 minutes
