@@ -129,9 +129,7 @@ async function autoLogin() {
         }
     }
 }
-
 // Try to automatically log in the user when the page loads
 autoLogin();
 
-// Add an interval to periodically check authentication status
-setInterval(checkAuth, 5 * 60 * 1000); // Check every 5 minutes
+setInterval(checkAuth, 5 * 60 * 1000); 
