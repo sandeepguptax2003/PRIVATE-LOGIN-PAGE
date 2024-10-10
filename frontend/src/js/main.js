@@ -91,34 +91,47 @@ function logout() {
 }
 
 // Function to automatically log in the user if they have a valid token
-async function autoLogin() {
-    const token = localStorage.getItem('token'); // Get the token from local storage
-    const email = localStorage.getItem('email'); // Get the email from local storage
-    if (token && email) { // Check if both token and email are present
+async function checkAuth() {
+    const token = localStorage.getItem('token');
+    if (token) {
         try {
-            const response = await fetch(`${API_URL}/auto-login`, {
-                method: 'POST',
+            const response = await fetch(`${API_URL}/check-auth`, {
+                method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` // Send the token in the Authorization header
-                },
-                body: JSON.stringify({ email }) // Send the email in the request body
+                    'Authorization': `Bearer ${token}`
+                }
             });
-            const data = await response.json();
             if (response.ok) {
-                // If auto-login is successful, show the logged-in state
-                showLoggedInState(email);
+                const data = await response.json();
+                showLoggedInState(data.user.email);
+                return true;
             } else {
-                // If auto-login fails, log the user out
                 logout();
+                return false;
             }
         } catch (error) {
-            // Handle any errors during the auto-login process
             console.error('Error:', error);
-            logout(); // Log the user out if an error occurs
+            logout();
+            return false;
+        }
+    }
+    return false;
+}
+
+// Updated autoLogin function
+async function autoLogin() {
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    if (token && email) {
+        const isAuthenticated = await checkAuth();
+        if (isAuthenticated) {
+            showLoggedInState(email);
         }
     }
 }
 
 // Try to automatically log in the user when the page loads
 autoLogin();
+
+// Add an interval to periodically check authentication status
+setInterval(checkAuth, 5 * 60 * 1000); // Check every 5 minutes
