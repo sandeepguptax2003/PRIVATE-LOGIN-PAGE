@@ -93,15 +93,17 @@ async function logout() {
     }
 }
 
+// Check authentication status when the page loads
 async function checkAuth() {
     try {
         const response = await fetch(`${API_URL}/check-auth`, {
             method: 'GET',
-            credentials: 'include' // This is important for cookies
+            credentials: 'include' // Include cookies in the request
         });
+
         if (response.ok) {
             const data = await response.json();
-            showLoggedInState(data.user.email);
+            showLoggedInState(data.user.email); // Show logged-in state
             return true;
         } else {
             return false;
@@ -111,6 +113,23 @@ async function checkAuth() {
         return false;
     }
 }
+
+// Call checkAuth on page load
+window.onload = async function() {
+    const isAuthenticated = await checkAuth();
+    if (!isAuthenticated) {
+        loginForm.style.display = 'block';
+        loggedInSection.style.display = 'none';
+    }
+};
+
+// Function to show logged-in UI
+function showLoggedInState(email) {
+    loginForm.style.display = 'none';
+    loggedInSection.style.display = 'block';
+    userEmailSpan.textContent = email;
+}
+
 
 
 // Check authentication status when the page loads
