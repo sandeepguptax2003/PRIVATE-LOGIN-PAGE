@@ -95,31 +95,31 @@ async function logout() {
 
 async function checkAuth() {
     try {
-        const response = await fetch(`${API_URL}/check-auth`, {
-            method: 'GET',
-            credentials: 'include'
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            showLoggedInState(data.user.email);
-            return true;
-        } else {
-            return false;
-        }
-    } catch (error) {
-        console.error('Error:', error);
+      const response = await fetch(`${API_URL}/check-auth`, {
+        method: 'GET',
+        credentials: 'include'  // This is crucial for sending cookies
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        showLoggedInState(data.user.email);
+        return true;
+      } else {
         return false;
+      }
+    } catch (error) {
+      console.error('Error in checkAuth:', error);
+      return false;
     }
-}
-
-window.onload = async function() {
+  }
+  
+  window.onload = async function() {
     const isAuthenticated = await checkAuth();
     if (!isAuthenticated) {
-        loginForm.style.display = 'block';
-        loggedInSection.style.display = 'none';
+      loginForm.style.display = 'block';
+      loggedInSection.style.display = 'none';
     }
-};
+  };
 
 // Function to show logged-in UI
 function showLoggedInState(email) {
