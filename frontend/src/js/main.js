@@ -25,7 +25,7 @@ async function verifyEmail() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email }),
-            credentials: 'include' // This is important for cookies
+            credentials: 'include' // Important for cookies
         });
         const data = await response.json();
         if (response.ok) {
@@ -36,9 +36,10 @@ async function verifyEmail() {
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred while verifying email. Please check the console for more details.');
+        alert('Failed to connect to the server.');
     }
 }
+
 
 async function verifyOTP() {
     const email = emailInput.value;
@@ -110,6 +111,7 @@ async function checkAuth() {
         return false;
     }
 }
+
 
 // Check authentication status when the page loads
 checkAuth();
