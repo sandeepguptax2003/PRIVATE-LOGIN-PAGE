@@ -50,7 +50,7 @@ async function verifyOTP() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, otp, rememberMe }),
-            credentials: 'include' // This is important for cookies
+            credentials: 'include'
         });
         const data = await response.json();
         if (response.ok) {
@@ -74,7 +74,7 @@ async function logout() {
     try {
         const response = await fetch(`${API_URL}/logout`, {
             method: 'POST',
-            credentials: 'include' // This is important for cookies
+            credentials: 'include'
         });
         if (response.ok) {
             loginForm.style.display = 'block';
@@ -93,17 +93,16 @@ async function logout() {
     }
 }
 
-// Check authentication status when the page loads
 async function checkAuth() {
     try {
         const response = await fetch(`${API_URL}/check-auth`, {
             method: 'GET',
-            credentials: 'include' // Include cookies in the request
+            credentials: 'include'
         });
 
         if (response.ok) {
             const data = await response.json();
-            showLoggedInState(data.user.email); // Show logged-in state
+            showLoggedInState(data.user.email);
             return true;
         } else {
             return false;
@@ -114,7 +113,6 @@ async function checkAuth() {
     }
 }
 
-// Call checkAuth on page load
 window.onload = async function() {
     const isAuthenticated = await checkAuth();
     if (!isAuthenticated) {
